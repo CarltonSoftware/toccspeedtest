@@ -1,0 +1,5 @@
+name = Original Cottages Website speed test
+description = Test the website using the gtmetrix api
+package = TOCC
+core = 7.x
+configure = admin/config/tocc/speedtest

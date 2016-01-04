@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * Define the table for storing speed test results
+ * 
+ * @return array
+ */
+function toccspeedtest_schema()
+{
+    $schema['toccspeedtest'] = array(
+        'description' => 'The main store for a toccspeedtest data.',
+        'fields' => array(
+            'test_id' => array(
+                'description' => 'Test id',
+                'type' => 'varchar',
+                'length' => 30,
+                'not null' => TRUE,
+            ),
+            'report_url' => array(
+                'description' => 'Report url',
+                'type' => 'varchar',
+                'length' => 255,
+                'not null' => TRUE
+            ),
+            'report_media_id' => array(
+                'description' => 'Media id for report',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'web_url' => array(
+                'description' => 'Test page url',
+                'type' => 'varchar',
+                'length' => 255,
+                'not null' => TRUE
+            ),
+            'pagespeed_score' => array(
+                'description' => 'Page speed score',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'yslow_score' => array(
+                'description' => 'YSLOW speed score',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'html_load_bytes' => array(
+                'description' => 'HTML load bytes',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'html_load_time' => array(
+                'description' => 'HTML load time',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'page_load_time' => array(
+                'description' => 'Page load time',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'page_load_bytes' => array(
+                'description' => 'Page load bytes',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'page_elements' => array(
+                'description' => 'Number of page elements',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'created' => array(
+                'description' => 'Created time',
+                'type' => 'int',
+                'not null' => TRUE
+            ),
+            'created_by' => array(
+                'description' => 'Created by user id',
+                'type' => 'varchar',
+                'length' => 10,
+                'not null' => TRUE
+            )
+        ),
+        'unique keys' => array(),
+        'foreign keys' => array(),
+        'primary key' => array('test_id'),
+    );
+
+    return $schema;
+}
+
+/**
+ * Uninstall hook
+ * 
+ * @return void
+ */
+function toccspeedtest_uninstall()
+{
+    if (db_table_exists('toccspeedtest')) {
+        db_drop_table('toccspeedtest');
+    }
+}

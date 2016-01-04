@@ -1,0 +1,139 @@
+<?php
+
+require_once 'Services_WTF_Test.php';
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function toccspeedtest_menu()
+{
+    $items = array();
+
+    // Admin homepage
+    $items['admin/config/tocc/speedtest'] = array(
+        'title' => 'TOCC Speed test',
+        'description' => 'Test the website speed using gtmetrix.',
+        'page callback' => 'system_admin_menu_block_page',
+        'access arguments' => array('toccadmin'),
+        'file' => 'system.admin.inc',
+        'file path' => drupal_get_path('module', 'system'),
+    );
+
+        // GT Metrix api testing
+        $items['admin/config/tocc/speedtest/config'] = array(
+            'title' => 'Speed test configuration',
+            'description' => 'Add in access details for the gtmetrix api.',
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('toccspeedtest_gtmetrix_config_form'),
+            'access arguments' => array('toccspeedtest'),
+            'file' => 'toccspeedtest.gtmetrix.config.inc',
+            'file path' => drupal_get_path('module', 'toccspeedtest'),
+        );
+
+        // GT Metrix api testing
+        $items['admin/config/tocc/speedtest/gtmetrix'] = array(
+            'title' => 'Test the website speed',
+            'description' => 'Using gtmetrix, test the website speed using the gtmetrix performance api.',
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('toccspeedtest_gtmetrix_view_form'),
+            'access arguments' => array('toccspeedtest'),
+            'file' => 'toccspeedtest.gtmetrix.inc',
+            'file path' => drupal_get_path('module', 'toccspeedtest'),
+        );
+
+        // GT Metrix api testing
+        $items['admin/config/tocc/speedtest/results'] = array(
+            'title' => 'View test results',
+            'description' => 'View the generated results from the gtmetrix system.',
+            'page callback' => 'toccspeedtest_gtmetrix_get_results',
+            'access arguments' => array('toccspeedtest'),
+            'file' => 'toccspeedtest.gtmetrix.inc',
+            'file path' => drupal_get_path('module', 'toccspeedtest')
+        );
+
+        // GT Metrix api testing
+        $items['admin/config/tocc/speedtest/results/export'] = array(
+            'title' => 'Export test results',
+            'page callback' => 'toccspeedtest_gtmetrix_export_results',
+            'access arguments' => array('toccspeedtest'),
+            'file' => 'toccspeedtest.gtmetrix.inc',
+            'file path' => drupal_get_path('module', 'toccspeedtest')
+        );
+
+        // GT Metrix api testing
+        $items['tocc/speedtest/gtmetrix/start'] = array(
+            'title' => 'Start the test callback',
+            'page callback' => 'toccspeedtest_start_gtmetrix_test_callback',
+            'access arguments' => array('access content'),
+            'file' => 'toccspeedtest.gtmetrix.inc',
+            'file path' => drupal_get_path('module', 'toccspeedtest'),
+            'delivery callback' => 'drupal_json_output'
+        );
+
+        // GT Metrix api testing
+        $items['tocc/speedtest/gtmetrix/poll/%'] = array(
+            'title' => 'Perform the test callback',
+            'page callback' => 'toccspeedtest_gtmetrix_callback',
+            'page arguments' => array(4),
+            'access arguments' => array('access content'),
+            'file' => 'toccspeedtest.gtmetrix.inc',
+            'file path' => drupal_get_path('module', 'toccspeedtest'),
+            'delivery callback' => 'drupal_json_output'
+        );
+
+    return $items;
+}
+
+
+/**
+ * Implements hook_permission()
+ * 
+ * @return array
+ */
+function toccspeedtest_permission()
+{
+    return array(
+        'toccspeedtest' => array(
+            'title' => 'Allow TOCC Speed test access'
+        )
+    );
+}
+
+/**
+ * Returnt the test url
+ * 
+ * @return string
+ */
+function toccspeedtest_get_website_test_url()
+{
+    return url(
+        variable_get(
+            'toccspeedtest_gtmetrix_test_url',
+            '<front>'
+        ),
+        array(
+            'absolute' => true
+        )
+    );
+}
+
+/**
+ * Get the connection
+ * 
+ * @return \Services_WTF_Test
+ * 
+ * @throws Exception
+ */
+function toccspeedtest_get_connection()
+{
+    if (variable_get('toccspeedtest_gtmetrix_email', false)) {
+        return new Services_WTF_Test(
+            variable_get('toccspeedtest_gtmetrix_email'),
+            variable_get('toccspeedtest_gtmetrix_apikey')
+        );
+    } else {
+        throw new Exception('Please make sure the email/api key has been configured', -1);
+    }
+}
