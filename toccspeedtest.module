@@ -83,6 +83,16 @@ function toccspeedtest_menu()
             'delivery callback' => 'drupal_json_output'
         );
 
+        // GT Metrix api testing
+        $items['tocc/speedtest/gtmetrix/json'] = array(
+            'title' => 'Export test results as json',
+            'page callback' => 'toccspeedtest_gtmetrix_export_results_to_json',
+            'access arguments' => array('access content'),
+            'file' => 'toccspeedtest.gtmetrix.inc',
+            'file path' => drupal_get_path('module', 'toccspeedtest'),
+            'delivery callback' => 'drupal_json_output'
+        );
+
     return $items;
 }
 

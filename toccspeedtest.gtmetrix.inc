@@ -275,6 +275,32 @@ function toccspeedtest_gtmetrix_export_results()
 }
 
 /**
+ * Output an array of results data
+ * 
+ * @return array
+ */
+function toccspeedtest_gtmetrix_export_results_to_json()
+{
+    $results = toccspeedtest_get_query()->execute()->fetchAll();
+    $json = array();
+    
+    foreach($results as $result) {
+        $json[] = array(
+            $result->test_id,
+            date('d M Y H:i:s', $result->created),
+            $result->pagespeed_score,
+            $result->yslow_score,
+            $result->html_load_bytes,
+            $result->html_load_time,
+            $result->page_load_bytes,
+            $result->page_load_time
+        );
+    }
+    
+    return $json;
+}
+
+/**
  * Return a page showing the gtmetrix retults
  * 
  * @return array
