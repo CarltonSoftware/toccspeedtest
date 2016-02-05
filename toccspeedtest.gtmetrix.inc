@@ -284,8 +284,8 @@ function toccspeedtest_gtmetrix_export_results_to_json()
     $results = toccspeedtest_get_query()->execute()->fetchAll();
     $json = array();
     
-    foreach($results as $result) {
-        $json[] = array(
+    foreach($results as $index => $result) {
+        $json[$result->test_id] = array(
             $result->test_id,
             date('d M Y H:i:s', $result->created),
             $result->pagespeed_score,
